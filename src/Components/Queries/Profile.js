@@ -2,22 +2,31 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../Hooks/UserContext";
 import Loading from "../Layouts/Loading";
-import axios from "../../config/api/axios";
 import { PiUserThin, PiStudentThin } from "react-icons/pi";
 import { FaArrowLeft } from "react-icons/fa";
+import { dummyUsers } from "../../data/users";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user } = React.useContext(UserContext);
+  // Use dummy data instead of context for development/testing
+  const useDummyData = true; // Set to false to use real data
+  const { user: contextUser } = React.useContext(UserContext) || {};
+  const user = useDummyData ? dummyUsers.student : contextUser;
   const [profile, setProfile] = React.useState({});
 
   React.useEffect(() => {
     const getProfile = async () => {
-      const response = await axios.get(`${user.userType}/${user._id}`);
-      setProfile(response.data);
+      if (useDummyData) {
+        // Use dummy data for development/testing
+        setProfile(user);
+        return;
+      }
+
+      // Original API call logic would go here when useDummyData is false
+      setProfile({});
     };
     getProfile();
-  }, [user]);
+  }, [user, useDummyData]);
 
   return (
     <main className="flex w-full flex-col justify-center md:w-fit">

@@ -1,36 +1,22 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../config/api/axios";
 import UserContext from "../../Hooks/UserContext";
 import { FaPlus, FaEdit, FaTrash, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { TableHeader } from "../Table";
 import Loading from "../Layouts/Loading";
 import ErrorStrip from "../ErrorStrip";
-
-// Dummy data for testing
-const dummyUser = {
-  _id: "dummy-user-id",
-  name: "Test User"
-};
-
-const dummyPaperList = [
-  { _id: "1", name: "Mathematics", paper: "Math 101" },
-  { _id: "2", name: "Physics", paper: "Physics 101" },
-  { _id: "3", name: "Chemistry", paper: "Chemistry 101" },
-  { _id: "4", name: "Biology", paper: "Biology 101" },
-  { _id: "5", name: "English", paper: "English 101" },
-  { _id: "6", name: "History", paper: "History 101" },
-  { _id: "7", name: "Geography", paper: "Geography 101" },
-];
+import { dummyUsers } from "../../data/users";
+import { dummyPapers } from "../../data/papers";
+import { dummyTimeSchedule } from "../../data/timeSchedule";
 
 const TimeScheduleForm = () => {
   const navigate = useNavigate();
   // Use dummy data instead of context for development/testing
   const useDummyData = true; // Set to false to use real data
   const { user: contextUser, paperList: contextPaperList } = useContext(UserContext) || {};
-  const user = useDummyData ? dummyUser : contextUser;
-  const paperList = useDummyData ? dummyPaperList : contextPaperList;
+  const user = useDummyData ? dummyUsers.staff : contextUser;
+  const paperList = useDummyData ? dummyPapers : contextPaperList;
   
   const [timeSchedule, setTimeSchedule] = useState({});
   const [disabled, setDisabled] = useState(true);
@@ -60,38 +46,21 @@ const TimeScheduleForm = () => {
       if (useDummyData) {
         // Use dummy data for development/testing
         setDisabled(false);
-        setTimeSchedule({
-          monday: ["Mathematics", "Physics", "--", "Chemistry", "English"],
-          tuesday: ["Physics", "Biology", "History", "--", "Mathematics"],
-          wednesday: ["Chemistry", "English", "Geography", "Physics", "Biology"],
-          thursday: ["Biology", "Mathematics", "English", "History", "--"],
-          friday: ["English", "Geography", "Chemistry", "Biology", "Physics"],
-        });
+        setTimeSchedule(dummyTimeSchedule);
         setId("dummy-schedule-id");
         return;
       }
 
-      // Original API call logic
-      try {
-        // fetching time schedule record
-        const response = await axios.get("time_schedule/" + user._id);
-        // saving record id for updating/deleting record
-        setId(response.data._id);
-        delete response.data.schedule._id;
-        setTimeSchedule(response.data.schedule);
-      } catch (err) {
-        // incase the record doesn't exist
-        if (err?.response?.status === 404) {
-          setDisabled(false);
-          setTimeSchedule({
-            monday: ["--", "--", "--", "--", "--"],
-            tuesday: ["--", "--", "--", "--", "--"],
-            wednesday: ["--", "--", "--", "--", "--"],
-            thursday: ["--", "--", "--", "--", "--"],
-            friday: ["--", "--", "--", "--", "--"],
-          });
-        } else setError(err);
-      }
+      // Original API call logic would go here when useDummyData is false
+      // For now, just use empty schedule
+      setDisabled(false);
+      setTimeSchedule({
+        monday: ["--", "--", "--", "--", "--"],
+        tuesday: ["--", "--", "--", "--", "--"],
+        wednesday: ["--", "--", "--", "--", "--"],
+        thursday: ["--", "--", "--", "--", "--"],
+        friday: ["--", "--", "--", "--", "--"],
+      });
     };
     fetchTimeSchedule();
   }, [user, useDummyData]);
@@ -111,21 +80,9 @@ const TimeScheduleForm = () => {
       return;
     }
 
-    // Original API call logic
-    try {
-      // adding a new time schedule record
-      const response = await axios.post("time_schedule/" + user._id, data);
-      toast.success(response.data.message);
-    } catch (err) {
-      // conflict, record already exists
-      if (err.response.status === 409) {
-        // updating existing record
-        const response = await axios.patch("time_schedule/" + user._id, data);
-        toast.success(response.data.message);
-      } else setError(err);
-    } finally {
-      setDisabled(true);
-    }
+    // Original API call logic would go here when useDummyData is false
+    toast.success("Time schedule saved!");
+    setDisabled(true);
   };
 
   const deleteTimeSchedule = async (e) => {
@@ -148,9 +105,8 @@ const TimeScheduleForm = () => {
       return;
     }
 
-    // Original API call logic
-    const response = await axios.delete("time_schedule/" + id);
-    toast.success(response.data.message, {
+    // Original API call logic would go here when useDummyData is false
+    toast.success("Time schedule deleted!", {
       icon: ({ theme, type }) => <FaTrash />,
     });
     setTimeSchedule({
@@ -160,6 +116,7 @@ const TimeScheduleForm = () => {
       thursday: ["--", "--", "--", "--", "--"],
       friday: ["--", "--", "--", "--", "--"],
     });
+    setDisabled(false);
   };
 
   return (

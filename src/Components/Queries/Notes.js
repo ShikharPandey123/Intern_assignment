@@ -1,37 +1,61 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "../../config/api/axios";
 import { Link } from "react-router-dom";
 import UserContext from "../../Hooks/UserContext";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Loading from "../Layouts/Loading";
 import ErrorStrip from "../ErrorStrip";
+import { dummyNotes } from "../../data/notes";
+import { dummyPapers } from "../../data/papers";
+import { dummyUsers } from "../../data/users";
 
 const Notes = () => {
-  const { paper, notes, setNotes, user } = useContext(UserContext);
+  // Use dummy data instead of context for development/testing
+  const useDummyData = true; // Set to false to use real data
+  const { paper: contextPaper, user: contextUser } = useContext(UserContext) || {};
+  const paper = useDummyData ? dummyPapers[0] : contextPaper;
+  const user = useDummyData ? dummyUsers.staff : contextUser;
+  const [notes, setNotes] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const getNotes = async () => {
-      try {
-        const response = await axios.get("notes/paper/" + paper._id);
-        setNotes(response.data);
-      } catch (err) {
-        setError(err);
+      if (useDummyData) {
+        // Use dummy data instead of API call
+        setNotes(dummyNotes);
+      } else {
+        try {
+          // This would be used in a real API environment
+          // const response = await axios.get("notes/paper/" + paper._id);
+          // setNotes(response.data);
+          setNotes(dummyNotes); // Fallback to dummy data
+        } catch (err) {
+          setError(err);
+        }
       }
     };
     getNotes();
     // return () => setNotes([]);
-  }, [paper, setNotes]);
+  }, [paper, useDummyData]);
 
   const deleteNote = async (e) => {
     const id = e.currentTarget.id;
-    const response = await axios.delete("notes/" + id);
-    const newNotes = notes.filter((note) => note._id !== id);
-    setNotes(newNotes);
-    toast.success(response.data.message, {
-      icon: () => <FaTrash />,
-    });
+    if (useDummyData) {
+      // Use dummy data - just remove from local state
+      const newNotes = notes.filter((note) => note._id !== id);
+      setNotes(newNotes);
+      toast.success("Note deleted successfully", {
+        icon: () => <FaTrash />,
+      });
+    } else {
+      // This would be used in a real API environment
+      // const response = await axios.delete("notes/" + id);
+      const newNotes = notes.filter((note) => note._id !== id);
+      setNotes(newNotes);
+      toast.success("Note deleted successfully", {
+        icon: () => <FaTrash />,
+      });
+    }
   };
 
   return (

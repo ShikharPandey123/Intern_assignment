@@ -2,80 +2,19 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../Hooks/UserContext";
 import { TableHeader } from "../Table";
-import axios from "../../config/api/axios";
 import Loading from "../Layouts/Loading";
 import ErrorStrip from "../ErrorStrip";
 import { FaArrowLeft } from "react-icons/fa";
-
-// Dummy data for testing
-const dummyUser = {
-  _id: "dummy-student-id",
-  name: "Test Student"
-};
-
-const dummyInternalData = [
-  {
-    paper: { paper: "Mathematics" },
-    marks: {
-      test: 8,
-      seminar: 9,
-      assignment: 7,
-      attendance: 8
-    }
-  },
-  {
-    paper: { paper: "Physics" },
-    marks: {
-      test: 6,
-      seminar: 7,
-      assignment: 8,
-      attendance: 9
-    }
-  },
-  {
-    paper: { paper: "Chemistry" },
-    marks: {
-      test: 9,
-      seminar: 8,
-      assignment: 9,
-      attendance: 7
-    }
-  },
-  {
-    paper: { paper: "Biology" },
-    marks: {
-      test: 7,
-      seminar: 6,
-      assignment: 8,
-      attendance: 8
-    }
-  },
-  {
-    paper: { paper: "English" },
-    marks: {
-      test: 5,
-      seminar: 6,
-      assignment: 7,
-      attendance: 6
-    }
-  },
-  {
-    paper: { paper: "History" },
-    marks: {
-      test: 8,
-      seminar: 9,
-      assignment: 8,
-      attendance: 9
-    }
-  }
-];
+import { toast } from "react-toastify";
+import { dummyUsers } from "../../data/users";
+import { dummyInternalMarks } from "../../data/internalMarks";
 
 const InternalStudent = () => {
   const navigate = useNavigate();
   // Use dummy data instead of context for development/testing
   const useDummyData = true; // Set to false to use real data
   const { user: contextUser } = React.useContext(UserContext) || {};
-  const user = useDummyData ? dummyUser : contextUser;
+  const user = useDummyData ? dummyUsers.student : contextUser;
   
   const [internal, setInternal] = React.useState([]);
   const [error, setError] = React.useState("");
@@ -85,17 +24,14 @@ const InternalStudent = () => {
       if (useDummyData) {
         // Use dummy data for development/testing
         console.log("Loading dummy internal marks data");
-        setInternal(dummyInternalData);
+        setInternal(dummyInternalMarks);
+        toast.success("Dummy internal marks data loaded!");
         return;
       }
 
-      // Original API call logic
-      try {
-        const response = await axios.get("/internal/student/" + user._id);
-        setInternal(response.data);
-      } catch (err) {
-        setError(err);
-      }
+      // Original API call logic would go here when useDummyData is false
+      setInternal([]);
+      setError({ message: "API calls disabled - using dummy data only" });
     };
     fetchInternal();
   }, [user, useDummyData]);

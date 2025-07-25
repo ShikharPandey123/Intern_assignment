@@ -1,15 +1,18 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import UserContext from "../../Hooks/UserContext";
-import axios from "../../config/api/axios";
 import { FaUniversity } from "react-icons/fa";
 import { PiStudentThin, PiUserThin, PiSpinnerGapBold } from "react-icons/pi";
 import CircleDesign from "../Layouts/CircleDesign";
 import ErrorStrip from "../ErrorStrip";
+import { dummyLoginCredentials } from "../../data/users";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext);
+  // Use dummy data instead of context for development/testing
+  const useDummyData = true; // Set to false to use real data
+  const { user, setUser, loading } = useContext(UserContext) || {};
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
@@ -35,35 +38,80 @@ const Login = () => {
       });
     } else {
       setButtonText("Loading...");
-      slowLoadingIndicator();
-      try {
-        const response = await axios.post("/auth/login/" + userType, {
-          username,
-          password,
-        });
-        await setUser({ ...response.data, userType });
-        localStorage.setItem(
-          "userDetails",
-          JSON.stringify({ ...response.data, userType })
-        );
-      } catch (err) {
-        setError(err);
-        setButtonText("Login");
+      
+      if (useDummyData) {
+        // Use dummy data for login
+        // Simulate a brief delay for loading
+        setTimeout(() => {
+          let loginUser = null;
+          // Check against flexible login credentials
+          const validCredential = dummyLoginCredentials.find(
+            cred => cred.username === username && 
+                   cred.password === password && 
+                   cred.userType === userType
+          );
+          if (validCredential) {
+            loginUser = { ...validCredential.userData, userType };
+            setUser(loginUser); // Always set context user
+            localStorage.setItem("userDetails", JSON.stringify(loginUser));
+            setButtonText("Login");
+            // Force navigation after a short delay to ensure state is updated
+            setTimeout(() => {
+              navigate("/dash");
+            }, 100);
+          } else {
+            setError({
+              response: {
+                data: "Invalid credentials. Try: student/password, shikhar/password, staff/password, or admin/password",
+              },
+            });
+            setButtonText("Login");
+          }
+        }, 1000);
+      } else {
+        slowLoadingIndicator();
+        try {
+          // This would be used in a real API environment
+          // const response = await axios.post("/auth/login/" + userType, {
+          //   username,
+          //   password,
+          // });
+          // await setUser({ ...response.data, userType });
+          // localStorage.setItem("userDetails", JSON.stringify({ ...response.data, userType }));
+          setButtonText("Login");
+        } catch (err) {
+          setError(err);
+          setButtonText("Login");
+        }
       }
     }
   };
 
-  useEffect(() => {
-    if ("userDetails" in localStorage) {
-      setUser(JSON.parse(localStorage.getItem("userDetails")));
-    }
-    setUserType("");
-    setMessage("");
-  }, [setUserType, setMessage, setUser]);
+ useEffect(() => {
+  // Always restore user from localStorage into context
+  if ("userDetails" in localStorage) {
+    const storedUser = JSON.parse(localStorage.getItem("userDetails"));
+    setUser(storedUser);
+  }
+  // Only clear userType and message on mount
+  setUserType("");
+  setMessage("");
+  // Only run this effect once on mount!
+  // eslint-disable-next-line
+}, []);
 
+  if (loading) {
+    // Show a loading spinner or blank screen while restoring user
+    return (
+      <main className="flex h-screen items-center justify-center bg-gradient-to-b from-slate-400 to-slate-300 dark:from-slate-800 dark:to-slate-950">
+        <PiSpinnerGapBold className="animate-spin text-6xl text-violet-700 dark:text-violet-400" />
+      </main>
+    );
+  }
   return (
     <>
       {!user?._id ? (
+        // ...existing code...
         <main className="relative z-0 flex h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-400 to-slate-300 text-slate-950 dark:from-slate-800 dark:to-slate-950 dark:text-slate-300">
           {message && !error && (
             <header className="absolute top-0 w-full bg-violet-500/50 p-2 text-xs dark:bg-slate-700/50 lg:text-base">
@@ -176,10 +224,21 @@ const Login = () => {
                 </button>
               </section>
             </form>
+            {/* Dummy credentials info */}
+            <section className="mt-4 p-3 rounded bg-violet-100 dark:bg-violet-900/60 text-sm text-slate-700 dark:text-violet-200">
+              <div className="mb-2 font-semibold">Demo Credentials:</div>
+              <div className="mb-1">
+                <span className="font-semibold">Student:</span> <span className="font-mono">student / password</span> or <span className="font-mono">shikhar / password</span>
+              </div>
+              <div>
+                <span className="font-semibold">Staff:</span> <span className="font-mono">staff / password</span> or <span className="font-mono">admin / password</span>
+              </div>
+            </section>
           </section>
         </main>
+        // ...existing code end...
       ) : (
-        <Navigate to="./dash" />
+        <Navigate to="/dash" />
       )}
     </>
   );

@@ -1,52 +1,19 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../config/api/axios";
 import UserContext from "../../Hooks/UserContext";
 import { TableHeader } from "../Table";
 import ErrorStrip from "../ErrorStrip";
 import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa";
-
-// Dummy data for testing
-const dummyUser = {
-  _id: "dummy-student-id",
-  name: "Test Student"
-};
-
-const dummyAttendanceData = [
-  {
-    hour: "I",
-    paper: { paper: "Advanced Mathematics" },
-    attendance: { present: true }
-  },
-  {
-    hour: "II", 
-    paper: { paper: "Modern Physics" },
-    attendance: { present: false }
-  },
-  {
-    hour: "III",
-    paper: { paper: "Organic Chemistry" },
-    attendance: { present: true }
-  },
-  {
-    hour: "IV",
-    paper: { paper: "English Literature" },
-    attendance: { present: true }
-  },
-  {
-    hour: "V",
-    paper: { paper: "Molecular Biology" },
-    attendance: { present: false }
-  }
-];
+import { dummyUsers } from "../../data/users";
+import { dummyAttendanceData } from "../../data/attendance";
 
 const AttendanceStudent = () => {
   const navigate = useNavigate();
   // Use dummy data instead of context for development/testing
   const useDummyData = true; // Set to false to use real data
   const { user: contextUser } = useContext(UserContext) || {};
-  const user = useDummyData ? dummyUser : contextUser;
+  const user = useDummyData ? dummyUsers.student : contextUser;
   const [attendance, setAttendance] = useState([]);
   const [date, setDate] = useState("");
   const [error, setError] = useState("");
@@ -72,15 +39,9 @@ const AttendanceStudent = () => {
       return;
     }
 
-    // Original API call logic
-    try {
-      const response = await axios.get(
-        `/attendance/student/${user._id}/${date}`
-      );
-      setAttendance(response.data);
-    } catch (err) {
-      setError(err);
-    }
+    // Original API call logic would go here when useDummyData is false
+    setAttendance([]);
+    setError({ message: "API calls disabled - using dummy data only" });
   };
 
   return (

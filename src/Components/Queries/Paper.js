@@ -3,65 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../../Hooks/UserContext";
 import { AiFillBook } from "react-icons/ai";
 import { FaArrowLeft } from "react-icons/fa";
-
-// Dummy data for testing
-const dummyPaperList = [
-  {
-    _id: "1",
-    paper: "Advanced Mathematics",
-    year: "2024-2025",
-    name: "Mathematics"
-  },
-  {
-    _id: "2", 
-    paper: "Modern Physics",
-    year: "2024-2025",
-    name: "Physics"
-  },
-  {
-    _id: "3",
-    paper: "Organic Chemistry",
-    year: "2024-2025", 
-    name: "Chemistry"
-  },
-  {
-    _id: "4",
-    paper: "Molecular Biology",
-    year: "2024-2025",
-    name: "Biology"
-  },
-  {
-    _id: "5",
-    paper: "English Literature",
-    year: "2024-2025",
-    name: "English"
-  },
-  {
-    _id: "6",
-    paper: "World History",
-    year: "2024-2025",
-    name: "History"
-  },
-  {
-    _id: "7",
-    paper: "Human Geography",
-    year: "2024-2025",
-    name: "Geography"
-  },
-  {
-    _id: "8",
-    paper: "Computer Science",
-    year: "2024-2025",
-    name: "Computer Science"
-  }
-];
+import { dummyPapers } from "../../data/papers";
 
 const Paper = () => {
   const navigate = useNavigate();
   // Use dummy data instead of context for development/testing
   const useDummyData = true; // Set to false to use real data
   const { setPaper, paperList: contextPaperList } = useContext(UserContext) || {};
-  const paperList = useDummyData ? dummyPaperList : contextPaperList;
+  const paperList = useDummyData ? dummyPapers : contextPaperList;
 
   return (
     <main className="paper">

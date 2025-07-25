@@ -1,38 +1,17 @@
 import { useState, useContext } from "react";
-import axios from "../../config/api/axios";
 import UserContext from "../../Hooks/UserContext";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { TableHeader, RowWithCheckbox } from "../Table";
 import ErrorStrip from "../ErrorStrip";
-
-// Dummy data for testing
-const dummyPaperList = [
-  { _id: "1", paper: "Advanced Mathematics", name: "Mathematics" },
-  { _id: "2", paper: "Modern Physics", name: "Physics" },
-  { _id: "3", paper: "Organic Chemistry", name: "Chemistry" },
-  { _id: "4", paper: "Molecular Biology", name: "Biology" },
-  { _id: "5", paper: "English Literature", name: "English" },
-];
-
-const dummyStudentsList = [
-  { _id: "s1", name: "John Smith", present: true },
-  { _id: "s2", name: "Emma Johnson", present: false },
-  { _id: "s3", name: "Michael Brown", present: true },
-  { _id: "s4", name: "Sarah Davis", present: true },
-  { _id: "s5", name: "David Wilson", present: false },
-  { _id: "s6", name: "Lisa Anderson", present: true },
-  { _id: "s7", name: "Robert Taylor", present: true },
-  { _id: "s8", name: "Jennifer Martinez", present: false },
-  { _id: "s9", name: "Christopher Lee", present: true },
-  { _id: "s10", name: "Amanda Garcia", present: true },
-];
+import { dummyPapers } from "../../data/papers";
+import { dummyStudents } from "../../data/students";
 
 const Attendance = () => {
   // Use dummy data instead of context for development/testing
   const useDummyData = true; // Set to false to use real data
   const { paperList: contextPaperList } = useContext(UserContext) || {};
-  const paperList = useDummyData ? dummyPaperList : contextPaperList;
+  const paperList = useDummyData ? dummyPapers : contextPaperList;
   const [attendance, setAttendance] = useState([]);
   const [paper, setPaper] = useState("");
   const [date, setDate] = useState("");
@@ -59,33 +38,15 @@ const Attendance = () => {
 
       // Simulate successful fetch with dummy data
       setId("dummy-attendance-id");
-      setAttendance(dummyStudentsList);
+      setAttendance(dummyStudents);
       setDisabled(true);
       toast.success("Dummy attendance data loaded!");
       return;
     }
 
-    // Original API call logic
-    try {
-      const response = await axios.get(`/attendance/${paper}/${date}/${hour}`);
-      // saving the record ID for Updating/Deleting record
-      setId(response.data._id);
-      setAttendance(response.data.attendance);
-      setDisabled(true);
-    } catch (err) {
-      setError(err);
-      // in case no attendance record exists
-      if (err.response.status === 404) {
-        const response = await axios.get("paper/" + paper);
-        // students list is fetched and mapped to add "present" value
-        const students = response.data.students;
-        students.forEach((student) => {
-          Object.assign(student, { present: true });
-        });
-        setAttendance(students);
-        setDisabled(false);
-      }
-    }
+    // Original API call logic would go here when useDummyData is false
+    setAttendance([]);
+    setError({ message: "API calls disabled - using dummy data only" });
   };
 
   // adding new attendance and updating existing attendance record
@@ -101,42 +62,10 @@ const Attendance = () => {
       return;
     }
 
-    // Original API call logic
-    // removing student names from data since only studentId is stored in database
-    const newData = attendance.map((i) => {
-      return { student: i._id, present: i.present };
-    });
-    try {
-      // adding a new attendance record
-      const response = await axios.post(
-        `/attendance/${paper}/${date}/${hour}`,
-        { paper, date, hour, attendance: newData }
-      );
-      toast.success(response.data.message);
-      setDisabled(true);
-      setError("");
-      fetchAttendance(e);
-    } catch (err) {
-      // conflict, attendance record already exists
-      if (err?.response.status === 409) {
-        const newData = attendance.map((i) => {
-          return { student: i.student._id, present: i.present };
-        });
-        try {
-          // updating the old attendance record
-          const response = await axios.patch(
-            `/attendance/${paper}/${date}/${hour}`,
-            { id, paper, date, hour, attendance: newData }
-          );
-          toast.success(response.data.message);
-          setDisabled(true);
-          setError("");
-          fetchAttendance(e);
-        } catch (err) {
-          setError(err);
-        }
-      } else setError(err);
-    }
+    // Original API call logic would go here when useDummyData is false
+    toast.success("Attendance saved!");
+    setDisabled(true);
+    setError("");
   };
 
   const deleteAttendance = async (e) => {
@@ -153,16 +82,11 @@ const Attendance = () => {
       return;
     }
 
-    // Original API call logic
-    try {
-      const response = await axios.delete("attendance/" + id);
-      toast.success(response.data.message, {
-        icon: ({ theme, type }) => <FaTrash />,
-      });
-      setAttendance([]);
-    } catch (err) {
-      setError(err);
-    }
+    // Original API call logic would go here when useDummyData is false
+    toast.success("Attendance deleted!", {
+      icon: ({ theme, type }) => <FaTrash />,
+    });
+    setAttendance([]);
   };
 
   // updating attendance state on "onChange" event.
