@@ -5,7 +5,7 @@ import { FaPlus, FaEdit, FaTrash, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { TableHeader } from "../Table";
 import Loading from "../Layouts/Loading";
-import ErrorStrip from "../ErrorStrip";
+// import ErrorStrip from "../ErrorStrip";
 import { dummyUsers } from "../../data/users";
 import { dummyPapers } from "../../data/papers";
 import { dummyTimeSchedule } from "../../data/timeSchedule";
@@ -20,8 +20,8 @@ const TimeScheduleForm = () => {
   
   const [timeSchedule, setTimeSchedule] = useState({});
   const [disabled, setDisabled] = useState(true);
-  const [id, setId] = useState("");
-  const [error, setError] = useState("");
+  // const [id, setId] = useState("");
+  // const [error, setError] = useState("");
 
   // updating attendance state on "onChange" event.
   const handleFormChange = (e) => {
@@ -47,7 +47,7 @@ const TimeScheduleForm = () => {
         // Use dummy data for development/testing
         setDisabled(false);
         setTimeSchedule(dummyTimeSchedule);
-        setId("dummy-schedule-id");
+        // setId("dummy-schedule-id");
         return;
       }
 
@@ -209,7 +209,7 @@ const TimeScheduleForm = () => {
           </button>
         )}
       </form>
-      {error ? <ErrorStrip error={error} /> : ""}
+      {/* {error ? <ErrorStrip error={error} /> : ""} */}
     </main>
   );
 };
