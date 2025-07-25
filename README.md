@@ -1,3 +1,11 @@
+
+
+https://github.com/user-attachments/assets/db44e240-5785-4e42-883d-1f701089ce07
+
+
+
+https://github.com/user-attachments/assets/5d52ce0e-2857-4ea0-8fe0-66491a71f850
+
 # Univ – College Data Management System
 
 A modern, React application for managing college data, including students, staff, papers, attendance, internal marks, notes, and more.  
