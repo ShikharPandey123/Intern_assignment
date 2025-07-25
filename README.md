@@ -1,139 +1,107 @@
-# KOLLEGE
+# Univ – College Data Management System
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+A modern, React application for managing college data, including students, staff, papers, attendance, internal marks, notes, and more.  
+**Deployed Demo:** [https://intern-assignment-six-ruby.vercel.app/](https://intern-assignment-six-ruby.vercel.app/)
 
-[kollege.onrender.com](https://kollege.onrender.com)
+---
 
-A College Based Data Management System.
+## 🚀 Features
 
-- There are two types of roles: Staff[Teacher,HOD] and Student.
+- **Role-based Login:** Staff (including HOD) and Student logins with demo credentials.
+- **Dashboard:** Quick access to Papers, Attendance, Internal Marks, Time Schedule, Notes, and Profile.
+- **Paper Management:** Add, join, or leave papers (subjects) as staff or student.
+- **Attendance Tracking:** Mark and view attendance for each paper and student.
+- **Internal Marks:** View and manage internal marks for each paper.
+- **Notes:** Upload and view notes for each subject.
+- **Staff Approval:** HOD can approve pending staff registrations.
+- **Student & Staff Management:** Add, edit, and view student and staff details.
+- **Time Schedule:** View weekly timetable.
+- **Modern UI:** Built with React, Tailwind CSS, and React Icons.
 
-## Login Details
+---
 
-PS: BE KIND :)
+## 🧑‍💻 Demo Login Credentials
 
-### Teacher [staff]
+| Role    | Username  | Password  | User Type |
+|---------|-----------|-----------|-----------|
+| Student | student   | password  | student   |
+| Student | shikhar   | password  | student   |
+| Staff   | staff     | password  | staff     |
+| HOD     | admin     | password  | staff     |
 
-**username:** Delphine  
-**pwd:** Delphine123
+---
 
-Teacher can add or edit
+## 🛠️ Tech Stack
 
-- Notes
-- Attendance
-- Internal Marks
-- Time Schedule
+- **Frontend:** React 18, React Router 6, Tailwind CSS, React Icons, React Toastify
+- **State Management:** React Context API
+- **Build Tools:** Create React App, react-scripts
+- **Other:** ESLint, Prettier
 
-### HOD (Head of Department) [staff]
+---
 
-**username:** Moriah  
-**pwd:** Moriah123
+## 📁 Project Structure
 
-HOD can do everything Teacher can.  
-HOD can also
+```
+src/
+  Components/
+    Forms/         # All forms (Login, Paper, Staff, Student, etc.)
+    Queries/       # Data display/query components (Attendance, Internal, Notes, etc.)
+    Layouts/       # Layout and navigation components
+    Table.js       # Table rendering
+    ErrorStrip.js  # Error display
+  data/            # All dummy data (students, staff, papers, attendance, etc.)
+  Hooks/           # UserContext for global state
+  config/          # Axios config (not used in dummy mode)
+  index.js, App.js # App entry and routing
+  index.css        # Tailwind and global styles
+public/
+  index.html, favicon.ico
+```
 
-- Approve new Teacher
-- Add New Paper
+---
 
-### Student
+## 🏁 Getting Started
 
-**username:** Bret  
-**pwd:** Bret
-
-Or register a new Student and Login.  
-You can also login with the First Name of any student in the class.
-
-Student can view
-
-- Notes
-- Attendance
-- Internal Marks
-
-Attendance and Marks needs to be added by the teacher first.  
-Student can also join or leave a Paper(Subject).
-
-## Tech Stack
-
-**Client:** React, TailwindCSS
-
-**Server:** NodeJS, ExpressJS
-
-**Database:** MongoDB, Mongoose
-
-## Other Features
-
-- Profile
-- Dark Theme
-- Mobile Responsive
-
-## Setting Up
-
-Clone the project:
+### 1. Clone the repository
 
 ```bash
-  git clone https://github.com/iafthab/kollege.git
+git clone https://github.com/ShikharPandey123/Intern_assignment.git
+cd Intern_assignment
 ```
 
-Change Directory:
+### 2. Install dependencies
 
 ```bash
-  cd kollege
+npm install
 ```
 
-Install dependencies:
+### 3. Start the development server
 
 ```bash
-  npm install
+npm start
 ```
 
-Finally,
+The app will run at [http://localhost:3000](http://localhost:3000).
 
-```bash
-  npm start
-```
+---
 
-### Using your own server and database
+## 📝 Usage
 
-The requests are send to the hosted server by default.  
-if you want to use your own server and database, follow the steps [here](https://github.com/iafthab/kollege_api#readme) to step up one.
+1. **Login** using one of the demo credentials above.
+2. **Navigate** using the sidebar to Papers, Attendance, Internal Mark, Time Schedule, etc.
+3. **Add/Join Papers:** Staff (HOD) can add papers; students can join/leave papers.
+4. **Mark/View Attendance:** Staff can mark attendance; students can view their attendance.
+5. **View Internal Marks:** Students can view their marks; staff can manage marks.
+6. **Notes:** Staff can upload notes; students can view/download notes.
+7. **Profile:** View and edit your profile.
+8. **Logout** using the top-right button.
 
-Then, go to src/config/api/axios.js. change the baseURL to your backend address:
+---
 
-```javascript
-baseURL: "http://localhost:3500";
-```
+## 🌐 Deployment
 
-```javascript
-baseURL: "https://example.address.com";
-```
+This app is deployed on Vercel:  
+[https://intern-assignment-six-ruby.vercel.app/](https://intern-assignment-six-ruby.vercel.app/)
 
-## RoadMap
-
-- Add admin 😴
-- Cache Queries
-- Paginate Queries
-
-## Contact
-
-Errors are bound to happen and the documentation is incomplete.  
-I'd love to hear feedbacks and suggestions.  
-In any case, start a conversation: [LinkedIn](https://www.linkedin.com/in/iafthab) [Telegram](https://tttttt.me/LazySage01) [Mail](mailto:afthabiqbal123@gmail.com)(Make sure your mail doesn't get flagged as spam/junk)  
-Thank You ❤️.
-
-## Acknowledgements
-
-- [MERN Stack Tutorial](https://www.youtube.com/watch?v=CvCiNeLnZ00&pp=ygUOZGF2ZSBncmF5IGZ1bGw%3D) by [Dave Gray](https://github.com/gitdagray)
-- [React Tutorial](https://www.youtube.com/watch?v=RVFAyFWO4go&pp=ygUOZGF2ZSBncmF5IGZ1bGw%3D) by [Dave Gray](https://github.com/gitdagray)
-- [React Icons](https://react-icons.github.io/react-icons/search)
-- [React Router](https://reactrouter.com/en/main)
-- [React Toastify](https://fkhadra.github.io/react-toastify/introduction)
-- [axios](https://axios-http.com/)
-- [README Editor](readme.so)
-
-## Related
-
-[kollege_api](https://github.com/iafthab/kollege_api)
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+---

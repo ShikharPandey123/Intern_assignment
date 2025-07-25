@@ -8,8 +8,7 @@ import { dummyInternalResults } from "../../data/internalResults";
 import { dummyPapers } from "../../data/papers";
 
 const InternalResultForm = () => {
-  // Use dummy data instead of context for development/testing
-  const useDummyData = true; // Set to false to use real data
+  const useDummyData = true;
   const { paperList: contextPaperList } = useContext(UserContext) || {};
   const paperList = useDummyData ? dummyPapers : contextPaperList;
   
